@@ -91,7 +91,7 @@ def prepare_for_training(df):
     # З решти відділяємо Validation (20% від 80% = 16% загалом)
     X_train, X_val, y_train, y_val = train_test_split(
         X_train_val, y_train_val, test_size=0.2, stratify=y_train_val,
-        random_state=42, shuffle=True
+        random_state=42, shuffle=False
     )
 
     print(f"\nSplit sizes:")

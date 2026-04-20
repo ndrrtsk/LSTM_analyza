@@ -38,5 +38,5 @@ def create_sequences(X, y, window_size=10):
     X_seq, y_seq = [], []
     for i in range(len(X) - window_size):
         X_seq.append(X[i: i + window_size])
-        y_seq.append(y[i + window_size])
+        y_seq.append(y[i + window_size-1])
     return np.array(X_seq), np.array(y_seq)

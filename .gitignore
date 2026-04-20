@@ -1,2 +1,4 @@
 MachineLearningCVE/
 venv/
+plots/
+__pycache__/
