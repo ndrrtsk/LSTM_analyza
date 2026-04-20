@@ -64,7 +64,38 @@ def load_and_clean_data(folder_path):
     df = reduce_mem_usage(df)
     return df
 
+def prepare_for_training_ordered(df):
+    """
+    Версія без перемішування — для LSTM, де важливий часовий порядок рядків.
+    Ділить дані 64% / 16% / 20% по хронологічному порядку.
+    """
+    X = df.drop('Label', axis=1)
+    y = df['Label']
 
+    # Видалення константних колонок
+    non_constant = (X != X.iloc[0]).any()
+    X = X.loc[:, non_constant]
+
+    scaler = MinMaxScaler()
+    X_scaled = scaler.fit_transform(X)
+
+    n = len(X_scaled)
+    train_end = int(n * 0.64)
+    val_end   = int(n * 0.80)
+
+    X_train = X_scaled[:train_end]
+    X_val   = X_scaled[train_end:val_end]
+    X_test  = X_scaled[val_end:]
+    y_train = y.values[:train_end]
+    y_val   = y.values[train_end:val_end]
+    y_test  = y.values[val_end:]
+
+    print(f"\n[LSTM ordered split]")
+    print(f"  Train:      {len(X_train)} ({len(X_train)/n*100:.1f}%)")
+    print(f"  Validation: {len(X_val)}   ({len(X_val)/n*100:.1f}%)")
+    print(f"  Test:       {len(X_test)}  ({len(X_test)/n*100:.1f}%)")
+
+    return X_train, X_val, X_test, y_train, y_val, y_test, X.columns
 def prepare_for_training(df):
     """
     Видаляє константні ознаки, масштабує дані та ділить на
@@ -91,7 +122,7 @@ def prepare_for_training(df):
     # З решти відділяємо Validation (20% від 80% = 16% загалом)
     X_train, X_val, y_train, y_val = train_test_split(
         X_train_val, y_train_val, test_size=0.2, stratify=y_train_val,
-        random_state=42, shuffle=False
+        random_state=42, shuffle=True
     )
 
     print(f"\nSplit sizes:")

@@ -1,4 +1,4 @@
-from data_preprocesing import load_and_clean_data, prepare_for_training
+from data_preprocesing import load_and_clean_data, prepare_for_training, prepare_for_training_ordered
 from models import build_mlp, build_lstm, create_sequences
 from train_eval import train_and_evaluate, analyze_errors, compare_models
 import numpy as np
@@ -13,6 +13,9 @@ df = load_and_clean_data(DATA_PATH)
 # 2. Попередня обробка та розподіл Train / Val / Test (64/16/20)
 # ============================================================
 X_train, X_val, X_test, y_train, y_val, y_test, feat_names = prepare_for_training(df)
+
+# LSTM використовує часово впорядковані дані
+X_tr_ord, X_va_ord, X_te_ord, y_tr_ord, y_va_ord, y_te_ord, _ = prepare_for_training_ordered(df)
 input_dim = X_train.shape[1]
 print(f"\nDataset shapes:")
 print(f"  Train: {X_train.shape}, Val: {X_val.shape}, Test: {X_test.shape}")
@@ -58,9 +61,9 @@ print("="*60)
 WINDOW_SIZE = 10
 
 print("Creating sequences for LSTM...")
-X_train_seq, y_train_seq = create_sequences(X_train, y_train.values, WINDOW_SIZE)
-X_val_seq,   y_val_seq   = create_sequences(X_val,   y_val.values,   WINDOW_SIZE)
-X_test_seq,  y_test_seq  = create_sequences(X_test,  y_test.values,  WINDOW_SIZE)
+X_train_seq, y_train_seq = create_sequences(X_tr_ord, y_tr_ord, WINDOW_SIZE)
+X_val_seq,   y_val_seq   = create_sequences(X_va_ord, y_va_ord, WINDOW_SIZE)
+X_test_seq,  y_test_seq  = create_sequences(X_te_ord, y_te_ord, WINDOW_SIZE)
 
 print(f"LSTM sequence shapes: Train={X_train_seq.shape}, Test={X_test_seq.shape}")
 
