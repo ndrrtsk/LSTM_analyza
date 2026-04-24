@@ -1,4 +1,4 @@
-from data_preprocesing import load_and_clean_data, prepare_for_training, prepare_for_training_ordered
+from data_preprocesing import load_and_clean_data, prepare_for_training,prepare_for_training_ordered
 from models import build_mlp, build_lstm, create_sequences
 from train_eval import train_and_evaluate, analyze_errors, compare_models
 import numpy as np
@@ -20,7 +20,6 @@ input_dim = X_train.shape[1]
 print(f"\nDataset shapes:")
 print(f"  Train: {X_train.shape}, Val: {X_val.shape}, Test: {X_test.shape}")
 print(f"  Features: {input_dim}")
-
 all_results = {}
 
 # ============================================================
@@ -62,8 +61,8 @@ WINDOW_SIZE = 10
 
 print("Creating sequences for LSTM...")
 X_train_seq, y_train_seq = create_sequences(X_tr_ord, y_tr_ord, WINDOW_SIZE)
-X_val_seq,   y_val_seq   = create_sequences(X_va_ord, y_va_ord, WINDOW_SIZE)
-X_test_seq,  y_test_seq  = create_sequences(X_te_ord, y_te_ord, WINDOW_SIZE)
+X_val_seq,   y_val_seq   = create_sequences(X_va_ord,   y_va_ord,   WINDOW_SIZE)
+X_test_seq,  y_test_seq  = create_sequences(X_te_ord,  y_te_ord,  WINDOW_SIZE)
 
 print(f"LSTM sequence shapes: Train={X_train_seq.shape}, Test={X_test_seq.shape}")
 
@@ -82,16 +81,16 @@ print("\n" + "="*60)
 print("ABLATION STUDY: LSTM Window=5")
 print("="*60)
 WINDOW_SIZE_SMALL = 5
-X_train_s, y_train_s = create_sequences(X_train, y_train.values, WINDOW_SIZE_SMALL)
-X_val_s,   y_val_s   = create_sequences(X_val,   y_val.values,   WINDOW_SIZE_SMALL)
-X_test_s,  y_test_s  = create_sequences(X_test,  y_test.values,  WINDOW_SIZE_SMALL)
 
+X_train_seq, y_train_seq = create_sequences(X_tr_ord, y_tr_ord, WINDOW_SIZE_SMALL)
+X_val_seq,   y_val_seq   = create_sequences(X_va_ord, y_va_ord, WINDOW_SIZE_SMALL)
+X_test_seq,  y_test_seq  = create_sequences(X_te_ord, y_te_ord, WINDOW_SIZE_SMALL)
 lstm_small = build_lstm(WINDOW_SIZE_SMALL, input_dim, dropout_rate=0.2, lstm_units=(64, 32))
 y_pred_lstm_s, y_prob_lstm_s, metrics_lstm_s = train_and_evaluate(
-    lstm_small, X_train_s, y_train_s, X_val_s, y_val_s, X_test_s, y_test_s,
+    lstm_small, X_train_seq, y_train_seq, X_val_seq, y_val_seq, X_test_seq, y_test_seq,
     model_name="LSTM_Window5", epochs=15, batch_size=256
 )
-analyze_errors(y_test_s, y_pred_lstm_s, model_name="LSTM_Window5")
+analyze_errors(y_test_seq, y_pred_lstm_s, model_name="LSTM_Window5")
 all_results['LSTM_Window5'] = metrics_lstm_s
 
 # ============================================================
