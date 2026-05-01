@@ -60,10 +60,6 @@ def load_and_clean_data(folder_path):
     return df
 
 def prepare_for_training_ordered(df):
-    """
-    Версія без перемішування — для LSTM, де важливий часовий порядок рядків.
-    Ділить дані 64% / 16% / 20% по хронологічному порядку.
-    """
     X = df.drop(['Label', '_source_file'], axis=1)
     y = df['Label']
     source = df['_source_file']
@@ -81,7 +77,6 @@ def prepare_for_training_ordered(df):
 
     train_idx, val_idx, test_idx = [], [], []
 
-    # ✅ Každý deň rozdeliť samostatne v chronologickom poradí
     for fname in source.unique():
         mask = (source == fname)
         idx = df.index[mask].tolist()
@@ -118,13 +113,13 @@ def prepare_for_training_ordered(df):
 
     return X_train, X_val, X_test, y_train, y_val, y_test, X.columns
 
-    
+
 def prepare_for_training(df):
     """
     Видаляє константні ознаки, масштабує дані та ділить на
     Train (64%) / Validation (16%) / Test (20%) з стратифікацією.
     """
-    X = df.drop('Label', axis=1)
+    X = df.drop(['Label', '_source_file'], axis=1)
     y = df['Label']
 
     # Видалення колонок з нульовою дисперсією (константи)
