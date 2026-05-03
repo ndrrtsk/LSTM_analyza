@@ -11,10 +11,9 @@ Projekt Neurónové siete 2025/2026 — Sysak · Zemlyanskiy · Synenko · Rytsk
 ```
 ├── data_preprocesing.py   # Načítanie CSV, čistenie, normalizácia, per-day/per-class split
 ├── models.py              # Definície MLP Baseline, MLP Large, LSTM Baseline, LSTM Large
-├── lstm.py                # LSTM sekvencie — create_sequences / create_windows
 ├── train_eval.py          # Tréning, metriky, grafy, analýza chýb
 ├── main.py                # Hlavný skript — CIC-IDS2017 experimenty (E1–E4)
-├── nsl_main.py            # Hlavný skript — NSL-KDD experimenty (E5, E5b, E6, E6b)
+├── lstm.py            # Hlavný skript — NSL-KDD experimenty (E5, E5b, E6, E6b)
 ├── requirements.txt       # Python závislosti
 └── README.md
 ```
@@ -106,7 +105,7 @@ python main.py
 ### Fáza 2 — NSL-KDD (E5, E5b, E6, E6b)
 
 ```bash
-python nsl_main.py
+python lstm.py
 ```
 
 ---
